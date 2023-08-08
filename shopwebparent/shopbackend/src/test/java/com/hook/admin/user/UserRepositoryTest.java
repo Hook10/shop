@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Rollback(value = false)
+//@Rollback(value = false)
 class UserRepositoryTest {
 
     @Autowired
@@ -37,9 +37,9 @@ class UserRepositoryTest {
 
     @Test
     void testCreateUserWithTwoRoles() {
-        User userRavi = new User("ravi@gmail.com", "ravi2020", "Ravi", "Kumar");
-        Role roleEditor = new Role(3);
-        Role roleAssistant = new Role(5);
+        User userRavi = new User("ravi5@gmail.com", "ravi2020", "Ravi5", "Kumar5");
+        Role roleEditor = entityManager.find(Role.class, 3);
+        Role roleAssistant = entityManager.find(Role.class,5);
 
         userRavi.addRole(roleEditor);
         userRavi.addRole(roleAssistant);
@@ -89,10 +89,18 @@ class UserRepositoryTest {
 
     @Test
     void deleteUser() {
-        Integer userId = 2;
+        Integer userId = 3;
         repo.deleteById(userId);
 
         assertThrows(Exception.class, () -> repo.findById(userId)
                 .orElseThrow(() -> new Exception("User not found")));
+    }
+
+    @Test
+    void testGetUserByEmail() {
+        String email = "ravi@gmail.com";
+        User user = repo.getUserByEmail(email);
+
+        assertThat(user).isNotNull();
     }
 }
