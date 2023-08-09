@@ -5,9 +5,11 @@ import com.hook.common.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserService {
 
     private final UserRepository userRepository;
@@ -68,5 +70,17 @@ public class UserService {
     public User get(Integer id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Could not find any user with ID " + id));
+    }
+
+    public void delete(Integer id) {
+        Long countById = userRepository.countById(id);
+        if (countById == null || countById == 0) {
+            throw new UserNotFoundException("Could not find any user with ID " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public void updateUserEnabledStatus(Integer id, boolean enabled) {
+        userRepository.updateEnabledStatus(id, enabled);
     }
 }

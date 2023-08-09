@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//@Rollback(value = false)
+@Rollback(value = true)
 class UserRepositoryTest {
 
     @Autowired
@@ -103,4 +103,25 @@ class UserRepositoryTest {
 
         assertThat(user).isNotNull();
     }
+
+    @Test
+    void testCountById() {
+        Integer id = 1;
+        Long countById = repo.countById(id);
+
+        assertThat(countById).isNotNull().isPositive();
+    }
+
+    @Test
+    void testDisableUser() {
+        Integer id = 1;
+        repo.updateEnabledStatus(id, false);
+    }
+
+    @Test
+    void testEnableUser() {
+        Integer id = 1;
+        repo.updateEnabledStatus(id, true);
+    }
+
 }
